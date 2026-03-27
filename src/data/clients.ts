@@ -1,0 +1,15 @@
+export const clients = [
+  'LegalZoom',
+  'Case-Mate',
+  'MeUndies',
+  'The Bouqs Co',
+  'DLuxury Brands',
+  'Birdwell',
+  'Trading Technologies',
+  'Bummer',
+  'CandyClub',
+  'Jadeblue',
+  'OliveNation',
+  'TrueRevo',
+  'The Gourmet Jar',
+]
