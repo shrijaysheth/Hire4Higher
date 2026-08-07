@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shaurya's Birthday Invite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#C8472F">
+<style>
+  /* ── Cartoon title-card world: single committed theme, every color explicit ── */
+  :root{
+    --ink:#3A2A1E;          /* cartoon outline brown-black */
+    --paper:#FFF8E7;        /* card cream */
+    --env:#F3E2BD;          /* envelope kraft cream */
+    --env-flap:#EBD5A8;
+    --red:#D9402A;          /* MGM title red */
+    --red-deep:#B93C26;
+    --bg-red:#C8472F;
+    --tom:#7B93A8;          /* Tom blue-grey */
+    --tom-deep:#4F759B;
+    --jerry:#B5703A;        /* Jerry brown */
+    --jerry-light:#E9C89B;
+    --pink:#E8A87C;
+    --cheese:#F5C531;
+    --cheese-deep:#D9A521;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Chalkboard SE','Comic Sans MS','Marker Felt',ui-rounded,'Trebuchet MS',sans-serif;
+    background:var(--bg-red);
+    color:var(--ink);
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* Sunburst rays, like the MGM cartoon title rings */
+  .rays{
+    position:fixed;left:50%;top:42%;width:220vmax;height:220vmax;
+    transform:translate(-50%,-50%);
+    background:repeating-conic-gradient(var(--bg-red) 0deg 11deg, var(--red-deep) 11deg 22deg);
+    animation:spin 80s linear infinite;
+    z-index:0;
+  }
+  .vignette{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(circle at 50% 42%, rgba(255,220,150,.18) 0%, transparent 34%, rgba(46,20,12,.42) 100%);
+  }
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+  #confetti{position:fixed;inset:0;width:100%;height:100%;z-index:6;pointer-events:none}
+
+  /* ───────────────────────── Scene 1 · the envelope ───────────────────────── */
+  .scene{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+  #envScene{transition:opacity .5s ease, transform .6s ease;cursor:pointer;border:0;background:none;width:100%;font:inherit;color:inherit}
+  #envScene.away{opacity:0;transform:translateY(16vh) scale(.9);pointer-events:none}
+  #envScene:focus-visible .envelope{outline:4px dashed var(--paper);outline-offset:14px;border-radius:12px}
+
+  .env-title{
+    color:var(--paper);
+    font-size:clamp(26px,7vw,38px);
+    letter-spacing:.5px;
+    text-shadow:2.5px 2.5px 0 var(--ink);
+    transform:rotate(-2deg);
+    margin-bottom:34px;
+    text-wrap:balance;text-align:center;padding:0 24px;
+  }
+
+  .envelope{
+    position:relative;
+    width:min(84vw,360px);
+    aspect-ratio:36/24;
+    perspective:1000px;
+    filter:drop-shadow(0 16px 26px rgba(46,20,12,.45));
+  }
+  .fill{position:absolute;inset:0}
+
+  /* Jerry hiding behind the envelope, popping up now and then */
+  .peekJerry{
+    position:absolute;top:-58px;right:20px;width:92px;z-index:0;
+    animation:peek 5s ease-in-out infinite;
+  }
+  @keyframes peek{
+    0%,52%{transform:translateY(70px)}
+    62%,86%{transform:translateY(4px)}
+    100%{transform:translateY(70px)}
+  }
+  .open .peekJerry{animation:none;transform:translateY(70px)}
+
+  .env-back{background:var(--env);border-radius:10px;z-index:1}
+  .cardPeek{
+    position:absolute;left:5%;right:5%;top:5%;bottom:8%;
+    background:var(--paper);
+    border:3px solid var(--ink);border-radius:8px;
+    z-index:2;
+    display:flex;align-items:flex-start;justify-content:center;padding-top:10px;
+    color:var(--red);font-size:15px;letter-spacing:2px;
+    transition:transform .7s cubic-bezier(.33,1.3,.5,1);
+  }
+  .lift .cardPeek{transform:translateY(-72%)}
+
+  .env-left {background:#E9D3A6;clip-path:polygon(0 0,0 100%,54% 50%);z-index:3}
+  .env-right{background:#E9D3A6;clip-path:polygon(100% 0,100% 100%,46% 50%);z-index:3}
+  .env-bottom{
+    background:#F1DFB9;clip-path:polygon(0 100%,100% 100%,50% 44%);z-index:3;
+    filter:drop-shadow(0 -2px 0 rgba(58,42,30,.3));
+  }
+
+  .env-flap{
+    background:#E3CB98;
+    clip-path:polygon(0 0,100% 0,50% 58%);
+    z-index:4;
+    transform-origin:top center;
+    filter:drop-shadow(0 3px 0 rgba(58,42,30,.4));
+    transition:transform .6s cubic-bezier(.6,0,.4,1) .12s, z-index 0s .45s;
+  }
+  .open .env-flap{transform:rotateX(-180deg);z-index:1}
+
+  .airmail{
+    position:absolute;left:0;right:0;bottom:0;height:11px;z-index:5;
+    border-radius:0 0 10px 10px;
+    background:repeating-linear-gradient(-45deg,
+      var(--red) 0 12px, var(--paper) 12px 24px,
+      var(--tom-deep) 24px 36px, var(--paper) 36px 48px);
+    border-top:2.5px solid var(--ink);
+  }
+
+  .env-address{
+    position:absolute;left:0;right:0;bottom:4.5%;z-index:5;
+    text-align:center;line-height:1.45;
+  }
+  .env-address .tiny{font-size:10px;letter-spacing:2.5px;color:var(--red);font-weight:700}
+  .env-address .line{font-size:14px}
+
+  .seal{
+    position:absolute;left:50%;top:43%;z-index:6;
+    width:62px;height:62px;margin-left:-31px;margin-top:-8px;
+    display:grid;place-items:center;
+    background:var(--red);border:3px solid var(--ink);border-radius:50%;
+    box-shadow:inset 0 -4px 0 rgba(58,42,30,.28);
+  }
+  .seal svg{width:40px;transform:rotate(-8deg)}
+  .open .seal{animation:sealPop .4s ease-in forwards}
+  @keyframes sealPop{
+    35%{transform:scale(1.25) rotate(-10deg)}
+    100%{transform:scale(0) rotate(24deg);opacity:0}
+  }
+
+  .hint{
+    margin-top:36px;color:var(--paper);font-size:17px;letter-spacing:1px;
+    text-shadow:1.5px 1.5px 0 var(--ink);
+    animation:bob 1.6s ease-in-out infinite;
+  }
+  @keyframes bob{50%{transform:translateY(-7px)}}
+  .open .hint{opacity:0;transition:opacity .3s}
+
+  /* ───────────────────────── Scene 2 · the invitation ─────────────────────── */
+  #cardScene{
+    z-index:3;opacity:0;pointer-events:none;transition:opacity .45s ease;
+    overflow-y:auto;justify-content:flex-start;
+    padding:calc(56px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));
+  }
+  #cardScene.active{opacity:1;pointer-events:auto}
+
+  .card{
+    position:relative;
+    width:min(92vw,410px);
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:20px;
+    padding:56px 26px 30px;
+    box-shadow:0 20px 40px rgba(46,20,12,.5);
+    transform:translateY(90px) scale(.68);
+    transition:transform .65s cubic-bezier(.3,1.45,.55,1);
+    text-align:center;
+    flex-shrink:0;
+  }
+  .active .card{transform:none}
+  .card::before{
+    content:"";position:absolute;inset:9px;border:2.5px dashed rgba(58,42,30,.3);
+    border-radius:12px;pointer-events:none;
+  }
+
+  .cardJerry{position:absolute;top:-56px;left:26px;width:98px}
+  .cardJerry .paw{position:absolute}
+  .cheeseCorner{position:absolute;top:-26px;right:-14px;width:78px;transform:rotate(12deg)}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+  .active .reveal{opacity:1;transform:none}
+  .active .r1{transition-delay:.25s}.active .r2{transition-delay:.38s}
+  .active .r3{transition-delay:.5s}.active .r4{transition-delay:.62s}
+  .active .r5{transition-delay:.74s}.active .r6{transition-delay:.88s}
+
+  .ticket{
+    display:inline-block;background:var(--cheese);border:3px solid var(--ink);
+    border-radius:999px;padding:5px 18px 4px;
+    font-size:14px;letter-spacing:3px;font-weight:700;
+    transform:rotate(-2deg);
+    box-shadow:2.5px 2.5px 0 var(--ink);
+  }
+
+  h1{margin-top:16px;line-height:.98}
+  h1 .n1{
+    display:block;font-size:clamp(46px,13vw,60px);color:var(--red);
+    letter-spacing:1px;text-shadow:3px 3px 0 var(--ink);transform:rotate(-2deg);
+  }
+  h1 .n2{
+    display:block;font-size:clamp(24px,7vw,31px);color:var(--tom-deep);
+    letter-spacing:2.5px;margin-top:8px;text-shadow:2px 2px 0 var(--ink);
+  }
+
+  .sub{margin-top:14px;font-size:16px;line-height:1.5;color:#6B5138;padding:0 6px;text-wrap:balance}
+
+  .paws{display:flex;justify-content:center;gap:16px;margin:18px 0 4px}
+  .paws svg{width:22px;opacity:.45}
+  .paws svg:nth-child(even){transform:rotate(18deg) translateY(-5px)}
+  .paws svg:nth-child(odd){transform:rotate(-12deg)}
+
+  .details{display:grid;gap:14px;margin-top:14px;text-align:left}
+  .row{
+    display:flex;align-items:center;gap:14px;
+    background:#FBEFD4;border:3px solid var(--ink);border-radius:14px;
+    padding:12px 14px;
+    box-shadow:3px 3px 0 rgba(58,42,30,.55);
+  }
+  .row .icon{
+    width:52px;height:52px;flex:none;display:grid;place-items:center;
+    background:var(--paper);border:3px solid var(--ink);border-radius:50%;
+  }
+  .row .icon svg{width:32px}
+  .row .lbl{font-size:11px;letter-spacing:3px;color:var(--red);font-weight:700}
+  .row .val{font-size:17.5px;line-height:1.3;margin-top:2px}
+  .row .note{font-size:13.5px;color:#6B5138;margin-top:1px}
+
+  .cast{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-top:22px}
+  .cast .tom{width:96px}
+  .cast .hole{width:70px;margin-bottom:-4px}
+  .bubble{
+    position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:14px;
+    padding:8px 12px;font-size:15px;margin-bottom:34px;transform:rotate(2deg);
+    box-shadow:2px 2px 0 rgba(58,42,30,.4);
+  }
+  .bubble::after{
+    content:"";position:absolute;left:14px;bottom:-12px;
+    border:7px solid transparent;border-top-color:var(--ink);
+  }
+
+  .closer{margin-top:16px;font-size:15px;color:#6B5138}
+
+  .replay{
+    margin-top:26px;background:none;border:0;cursor:pointer;
+    font:inherit;font-size:14px;letter-spacing:2px;color:var(--paper);
+    text-shadow:1.5px 1.5px 0 var(--ink);opacity:.9;padding:8px 12px;
+  }
+  .replay:focus-visible{outline:3px dashed var(--paper);border-radius:8px}
+
+  @media (prefers-reduced-motion:reduce){
+    .rays,.hint,.peekJerry{animation:none}
+    .cardPeek,.env-flap,.card,.reveal,#envScene,#cardScene{transition-duration:.01s;transition-delay:0s}
+  }
+</style>
+</head>
+<body>
+
+<div class="rays"></div>
+<div class="vignette"></div>
+<canvas id="confetti"></canvas>
+
+<!-- ═══ SVG sprites ═══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="jerryHead">
+      <circle cx="25" cy="28" r="21" fill="#B5703A" stroke="#3A2A1E" stroke-width="4.5"/>
+      <circle cx="25" cy="28" r="11" fill="#E8A87C"/>
+      <circle cx="95" cy="28" r="21" fill="#B5703A" stroke="#3A2A1E" stroke-width="4.5"/>
+      <circle cx="95" cy="28" r="11" fill="#E8A87C"/>
+      <ellipse cx="60" cy="66" rx="38" ry="36" fill="#B5703A" stroke="#3A2A1E" stroke-width="4.5"/>
+      <ellipse cx="60" cy="78" rx="25" ry="20" fill="#E9C89B"/>
+      <ellipse cx="49" cy="58" rx="7" ry="10" fill="#fff" stroke="#3A2A1E" stroke-width="3"/>
+      <ellipse cx="71" cy="58" rx="7" ry="10" fill="#fff" stroke="#3A2A1E" stroke-width="3"/>
+      <circle cx="50.5" cy="61" r="3.4" fill="#3A2A1E"/>
+      <circle cx="69.5" cy="61" r="3.4" fill="#3A2A1E"/>
+      <ellipse cx="60" cy="74" rx="5.5" ry="4.5" fill="#3A2A1E"/>
+      <path d="M49 84 Q60 93 71 84" fill="none" stroke="#3A2A1E" stroke-width="3" stroke-linecap="round"/>
+      <path d="M20 70 L2 66 M20 76 L3 78" stroke="#3A2A1E" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M100 70 L118 66 M100 76 L117 78" stroke="#3A2A1E" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+    <g id="tomHead">
+      <path d="M22 40 L30 4 L52 26 Z" fill="#7B93A8" stroke="#3A2A1E" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M29 30 L32 15 L42 25 Z" fill="#E8A87C"/>
+      <path d="M108 40 L100 4 L78 26 Z" fill="#7B93A8" stroke="#3A2A1E" stroke-width="4.5" stroke-linejoin="round"/>
+      <path d="M101 30 L98 15 L88 25 Z" fill="#E8A87C"/>
+      <ellipse cx="65" cy="64" rx="44" ry="40" fill="#7B93A8" stroke="#3A2A1E" stroke-width="4.5"/>
+      <ellipse cx="65" cy="82" rx="28" ry="19" fill="#F3F0E4"/>
+      <ellipse cx="52" cy="56" rx="8" ry="11" fill="#F5E27A" stroke="#3A2A1E" stroke-width="3"/>
+      <ellipse cx="78" cy="56" rx="8" ry="11" fill="#F5E27A" stroke="#3A2A1E" stroke-width="3"/>
+      <circle cx="54" cy="59" r="3.6" fill="#3A2A1E"/>
+      <circle cx="76" cy="59" r="3.6" fill="#3A2A1E"/>
+      <ellipse cx="65" cy="74" rx="6" ry="4.5" fill="#3A2A1E"/>
+      <path d="M53 89 Q65 97 77 89" fill="none" stroke="#3A2A1E" stroke-width="3" stroke-linecap="round"/>
+      <path d="M24 68 L4 64 M24 75 L5 78 M106 68 L126 64 M106 75 L125 78" stroke="#3A2A1E" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+    <g id="cheese">
+      <path d="M8 82 L112 32 L112 82 Z" fill="#F5C531" stroke="#3A2A1E" stroke-width="5" stroke-linejoin="round"/>
+      <circle cx="62" cy="72" r="7" fill="#D9A521"/>
+      <circle cx="90" cy="58" r="5" fill="#D9A521"/>
+      <circle cx="98" cy="74" r="4" fill="#D9A521"/>
+    </g>
+    <g id="paw">
+      <ellipse cx="24" cy="30" rx="12" ry="9" fill="#3A2A1E"/>
+      <circle cx="10" cy="16" r="5" fill="#3A2A1E"/>
+      <circle cx="24" cy="11" r="5.5" fill="#3A2A1E"/>
+      <circle cx="38" cy="16" r="5" fill="#3A2A1E"/>
+    </g>
+    <g id="hole">
+      <path d="M6 58 L6 36 A29 29 0 0 1 64 36 L64 58 Z" fill="#2A1E14" stroke="#3A2A1E" stroke-width="4"/>
+      <line x1="0" y1="58" x2="70" y2="58" stroke="#3A2A1E" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g id="cake">
+      <rect x="9" y="25" width="30" height="14" rx="3" fill="#E8A87C" stroke="#3A2A1E" stroke-width="3"/>
+      <path d="M9 29 Q13 33 17 29 Q21 33 25 29 Q29 33 33 29 Q37 33 39 29" fill="none" stroke="#FFF8E7" stroke-width="3" stroke-linecap="round"/>
+      <rect x="22" y="13" width="4.5" height="12" fill="#D9402A" stroke="#3A2A1E" stroke-width="2"/>
+      <ellipse cx="24" cy="8" rx="3.4" ry="4.6" fill="#F5C531" stroke="#3A2A1E" stroke-width="2"/>
+      <line x1="4" y1="41" x2="44" y2="41" stroke="#3A2A1E" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ═══ Scene 1 · envelope ═══ -->
+<div class="scene" id="envScene" role="button" tabindex="0" aria-label="Open Shaurya's birthday invitation">
+  <div class="env-title">A special delivery has arrived&hellip;</div>
+  <div class="envelope" id="envelope" aria-hidden="true">
+    <svg class="peekJerry" viewBox="0 0 120 110"><use href="#jerryHead"/></svg>
+    <div class="env-back fill"></div>
+    <div class="cardPeek">&#9733; &#9733; &#9733;</div>
+    <div class="env-left fill"></div>
+    <div class="env-right fill"></div>
+    <div class="env-bottom fill"></div>
+    <div class="env-flap fill"></div>
+    <div class="env-address">
+      <div class="tiny">SPECIAL DELIVERY</div>
+      <div class="line">To: A Very Important Guest</div>
+      <div class="line">From: Shaurya, Tom &amp; Jerry</div>
+    </div>
+    <div class="airmail"></div>
+    <div class="seal"><svg viewBox="0 0 120 100"><use href="#cheese"/></svg></div>
+  </div>
+  <div class="hint">&#10024; Tap the envelope to open &#10024;</div>
+</div>
+
+<!-- ═══ Scene 2 · invitation card ═══ -->
+<div class="scene" id="cardScene">
+  <div class="card" role="group" aria-label="Birthday invitation details">
+    <svg class="cardJerry" viewBox="0 0 120 110" aria-hidden="true"><use href="#jerryHead"/></svg>
+    <svg class="cheeseCorner" viewBox="0 0 120 100" aria-hidden="true"><use href="#cheese"/></svg>
+
+    <div class="reveal r1"><span class="ticket">YOU'RE INVITED!</span></div>
+
+    <h1 class="reveal r2">
+      <span class="n1">SHAURYA'S</span>
+      <span class="n2">BIRTHDAY BASH</span>
+    </h1>
+
+    <p class="sub reveal r3">Join the cat-and-mouse chase &mdash; cake, games and plenty of cheese!</p>
+
+    <div class="paws reveal r3" aria-hidden="true">
+      <svg viewBox="0 0 48 42"><use href="#paw"/></svg>
+      <svg viewBox="0 0 48 42"><use href="#paw"/></svg>
+      <svg viewBox="0 0 48 42"><use href="#paw"/></svg>
+      <svg viewBox="0 0 48 42"><use href="#paw"/></svg>
+    </div>
+
+    <div class="details">
+      <div class="row reveal r4">
+        <div class="icon"><svg viewBox="0 0 48 48"><use href="#cake"/></svg></div>
+        <div>
+          <div class="lbl">WHEN</div>
+          <div class="val">Saturday, 15th August 2026</div>
+          <div class="note">5:00 PM onwards</div>
+        </div>
+      </div>
+      <div class="row reveal r5">
+        <div class="icon"><svg viewBox="0 0 76 62"><use href="#hole"/></svg></div>
+        <div>
+          <div class="lbl">WHERE</div>
+          <div class="val">26, Amrakadamb Society</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cast reveal r6" aria-hidden="true">
+      <svg class="tom" viewBox="0 0 130 110"><use href="#tomHead"/></svg>
+      <div class="bubble">See you there!</div>
+      <svg class="hole" viewBox="0 0 76 62"><use href="#hole"/></svg>
+    </div>
+
+    <p class="closer reveal r6">Come for the cake, stay for the chase!</p>
+  </div>
+
+  <button class="replay" id="replay">&#8635; &nbsp;WATCH IT OPEN AGAIN</button>
+</div>
+
+<script>
+  var envScene = document.getElementById('envScene');
+  var cardScene = document.getElementById('cardScene');
+  var envelope = document.getElementById('envelope');
+  var replay = document.getElementById('replay');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var opened = false;
+
+  function openInvite(){
+    if (opened) return;
+    opened = true;
+    envScene.classList.add('open');
+    setTimeout(function(){ envScene.classList.add('lift'); }, reduced ? 0 : 420);
+    setTimeout(function(){
+      envScene.classList.add('away');
+      cardScene.classList.add('active');
+      if (!reduced) fireConfetti();
+    }, reduced ? 50 : 1150);
+  }
+
+  function resetInvite(){
+    opened = false;
+    cardScene.classList.remove('active');
+    envScene.classList.remove('away');
+    setTimeout(function(){
+      envScene.classList.remove('open','lift');
+    }, 350);
+    particles = [];
+  }
+
+  envScene.addEventListener('click', openInvite);
+  envScene.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openInvite(); }
+  });
+  replay.addEventListener('click', resetInvite);
+
+  /* ── confetti ── */
+  var canvas = document.getElementById('confetti');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var colors = ['#D9402A', '#F5C531', '#4F759B', '#FFF8E7', '#B5703A', '#E8A87C'];
+  var running = false;
+
+  function sizeCanvas(){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', sizeCanvas);
+  sizeCanvas();
+
+  function fireConfetti(){
+    var w = window.innerWidth, h = window.innerHeight;
+    for (var i = 0; i < 140; i++){
+      var angle = Math.random() * Math.PI * 2;
+      var speed = 3 + Math.random() * 8;
+      particles.push({
+        x: w / 2, y: h * 0.35,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 5,
+        size: 5 + Math.random() * 7,
+        color: colors[(Math.random() * colors.length) | 0],
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - .5) * .3,
+        life: 1
+      });
+    }
+    if (!running){ running = true; requestAnimationFrame(tick); }
+  }
+
+  function tick(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var alive = false;
+    for (var i = 0; i < particles.length; i++){
+      var p = particles[i];
+      if (p.life <= 0) continue;
+      alive = true;
+      p.vy += 0.22; p.vx *= 0.99;
+      p.x += p.vx; p.y += p.vy;
+      p.rot += p.vr;
+      p.life -= 0.006;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(p.life, 0);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    }
+    if (alive){ requestAnimationFrame(tick); }
+    else { running = false; particles = []; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+</script>
+</body>
+</html>
